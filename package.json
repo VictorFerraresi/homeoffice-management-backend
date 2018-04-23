@@ -4,6 +4,7 @@
   "description": "CRUD Apis for a home office management application",
   "main": "index.js",
   "scripts": {
+    "start": "grunt && node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,5 +13,9 @@
   },
   "author": "Victor Ferraresi",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/victorferraresi/homeoffice-management-backend#readme"
+  "homepage": "https://bitbucket.org/victorferraresi/homeoffice-management-backend#readme",
+  "devDependencies": {
+    "grunt": "^1.0.2",
+    "grunt-contrib-jshint": "^1.1.0"
+  }
 }
