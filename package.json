@@ -1,0 +1,16 @@
+{
+  "name": "ho-mgmt-backend",
+  "version": "1.0.0",
+  "description": "CRUD Apis for a home office management application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://victorferraresi@bitbucket.org/victorferraresi/homeoffice-management-backend.git"
+  },
+  "author": "Victor Ferraresi",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/victorferraresi/homeoffice-management-backend#readme"
+}
