@@ -19,6 +19,7 @@
     "grunt-contrib-jshint": "^1.1.0"
   },
   "dependencies": {
+    "bcrypt-node": "^0.1.0",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.0.16",
     "restify": "^7.1.1",
