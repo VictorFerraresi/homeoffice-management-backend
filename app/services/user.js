@@ -2,16 +2,16 @@
 
 const mongoose = require('mongoose'),
       errors = require('restify-errors'),
-      User = require('../models/user'),
+      userModel = require('../models/user'),
       bcrypt = require('bcrypt-node'),
       jwt = require('jsonwebtoken'),
       config = require('../common/config');
 
-var user = mongoose.model('User');
+var User = mongoose.model('User');
 
 module.exports = {
   getAll: function(req, res, next) {
-    user.find({}, function (err, users) {
+    User.find({}, function (err, users) {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -23,7 +23,7 @@ module.exports = {
   },
 
   find: function(req, res, next) {
-    user.findOne({ username: req.params.username }, function(err, doc) {
+    User.findOne({ username: req.params.username }, function(err, doc) {
       if (err) {
         console.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -47,7 +47,7 @@ module.exports = {
       };
       res.send(ret);
     } else {
-      user.findOne({ username: req.params.username }).then((new_user) => {
+      User.findOne({ username: req.params.username }).then((new_user) => {
         if(new_user === null) {
           res.status(203);
           ret = {
@@ -67,14 +67,14 @@ module.exports = {
               if(check) {
                     // password OK
                     res.status(200);
-                    var user = {
+                    var usr = {
                       email: new_user.email,
                       username: new_user.username,
                       _id: new_user._id
                     };
 
                     ret = {
-                      token: jwt.sign(user, config.jwt.secret)
+                      token: jwt.sign(usr, config.jwt.secret)
                     };
 
                     res.send(ret);
@@ -117,7 +117,7 @@ module.exports = {
       };
       res.send(ret);
     } else {
-      user.findOne({$or:[{ username: req.params.username }, {email: req.params.email}]}).then((new_user) => {
+      User.findOne({$or:[{ username: req.params.username }, {email: req.params.email}]}).then((new_user) => {
         if(new_user !== null) {
           if(new_user.username === req.params.username){
             res.status(203);
@@ -141,14 +141,14 @@ module.exports = {
         } else {
           try {
             bcrypt.hash(req.params.password, null, null, function(err, hash) {
-              var user = new User({
+              var usr = new User({
                 username: req.params.username,
                 password: hash,
                 email: req.params.email
               });
 
               try {
-                user.save();
+                usr.save();
 
                     // user registered
                     res.status(200);
