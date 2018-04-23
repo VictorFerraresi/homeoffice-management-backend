@@ -1,3 +1,10 @@
 {
-  "extends": ["airbnb-standard"]
+  "extends": ["airbnb-standard"],
+  "rules": {
+    "global-require": OFF,
+    "no-underscore-dangle": OFF,
+    "import/no-dynamic-require": OFF,
+    "consistent-return": OFF,
+    "handle-callback-err": OFF
+  }
 }

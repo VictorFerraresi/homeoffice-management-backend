@@ -1,7 +1,6 @@
-'use strict';
+const mongoose = require('mongoose');
 
-const mongoose = require('mongoose'),
-      Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const UserSchema = new Schema({
   username: {
@@ -17,17 +16,17 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     index: { unique: true },
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'invalid email'],
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'invalid email'],
     lowercase: true
   },
-  password: { type: String, required: true },
+  password: { type: String, required: true }
 }, { timestamps: { createdAt: 'createdAt' } });
 
 class User {
 
 }
 
-module.exports = function() {
+module.exports = () => {
   UserSchema.loadClass(User);
   return mongoose.model('User', UserSchema);
 };

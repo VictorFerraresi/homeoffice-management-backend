@@ -4,7 +4,7 @@
   "description": "CRUD Apis for a home office management application",
   "main": "index.js",
   "scripts": {
-    "start": "eslint && node index",
+    "start": "eslint . && node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
