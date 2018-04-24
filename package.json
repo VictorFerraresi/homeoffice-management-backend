@@ -4,7 +4,7 @@
   "description": "CRUD Apis for a home office management application",
   "main": "index.js",
   "scripts": {
-    "start": "eslint . && node index",
+    "start": "eslint . && nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +21,7 @@
     "bcrypt-node": "^0.1.0",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.0.16",
+    "nodemon": "^1.17.3",
     "restify": "^7.1.1",
     "restify-cors-middleware": "^1.1.0",
     "restify-errors": "^6.0.0",
