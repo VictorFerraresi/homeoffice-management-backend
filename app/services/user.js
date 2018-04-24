@@ -8,6 +8,12 @@ const logger = require('../common/logger');
 const User = mongoose.model('User');
 
 class UserService {
+  /**
+   * Method responsible for returning all the Users in the database as a RESTful webservice
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
   static getAll (req, res, next) {
     User.find({}, (err, users) => {
       if (err) {
@@ -20,6 +26,12 @@ class UserService {
     });
   }
 
+  /**
+   * Method responsible for returning a User by username from the database as a RESTful webservice
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
   static find (req, res, next) {
     User.findOne({ username: req.params.username }, (err, doc) => {
       if (err) {
@@ -32,6 +44,12 @@ class UserService {
     });
   }
 
+  /**
+   * Method responsible for validating an user password and authenticating it
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
   static validatePassword (req, res, next) {
     let ret;
 
@@ -102,6 +120,12 @@ class UserService {
     }
   }
 
+  /**
+   * Method responsible for registering a new user if it already not exists
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
   static tryRegister (req, res, next) {
     let ret;
 

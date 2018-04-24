@@ -7,6 +7,11 @@ const options = {
   promiseLibrary: global.Promise
 };
 
+/**
+ * Method responsible for returning a valid connection with the MongoDB
+ * @param  {String}               URI The MongoDB complete connection URI
+ * @return {ConnectionHandle}     A MongoDB Connection Handle
+ */
 function connect (URI) {
   return mongoose.connect(URI, options)
     .then((handle) => {
