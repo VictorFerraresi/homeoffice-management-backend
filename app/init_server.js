@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const restifyPlugins = require('restify-plugins');
 const logger = require('./common/logger');
 const corsMiddleware = require('restify-cors-middleware');
-const jwtMiddleware = require('./security/jwt-middleware');
+const jwtMiddleware = require('./security/jwt_middleware');
 
 const cors = corsMiddleware({
   preflightMaxAge: 5,
