@@ -3,7 +3,7 @@ const config = require('../common/config');
 
 module.exports = {
   verifyToken: (req, res, next) => {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
       jsonwebtoken.verify(req.headers.authorization.split(' ')[1], config.jwt.secret, (err, decode) => {
         if (err) {
           req.user = undefined;
