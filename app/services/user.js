@@ -7,8 +7,8 @@ const logger = require('../common/logger');
 
 const User = mongoose.model('User');
 
-module.exports = {
-  getAll: (req, res, next) => {
+class UserService {
+  static getAll (req, res, next) {
     User.find({}, (err, users) => {
       if (err) {
         logger.error(err);
@@ -18,9 +18,9 @@ module.exports = {
       res.send(users);
       next();
     });
-  },
+  }
 
-  find: (req, res, next) => {
+  static find (req, res, next) {
     User.findOne({ username: req.params.username }, (err, doc) => {
       if (err) {
         logger.error(err);
@@ -30,9 +30,9 @@ module.exports = {
       res.send(doc);
       next();
     });
-  },
+  }
 
-  validatePassword: (req, res, next) => {
+  static validatePassword (req, res, next) {
     let ret;
 
     if (req.params.username === undefined || req.params.password === undefined) {
@@ -100,9 +100,9 @@ module.exports = {
         throw error;
       });
     }
-  },
+  }
 
-  tryRegister: (req, res, next) => {
+  static tryRegister (req, res, next) {
     let ret;
 
     if (req.params.username === undefined || req.params.password === undefined ||
@@ -188,5 +188,6 @@ module.exports = {
         });
     }
   }
+}
 
-};
+module.exports = UserService;
