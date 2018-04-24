@@ -14,6 +14,7 @@ const cors = corsMiddleware({
 });
 
 const userRouter = require('./routes/user');
+const projectRouter = require('./routes/project');
 
 const server = restify.createServer({
   name: config.name,
@@ -32,6 +33,7 @@ server.use(jwtMiddleware.verifyToken);
 const prefix = `${config.prefix}/${config.api.version}`;
 
 userRouter.applyRoutes(server, prefix);
+projectRouter.applyRoutes(server, prefix);
 
 server.listen(config.port, () => {
   const db = mongoose.connection;
