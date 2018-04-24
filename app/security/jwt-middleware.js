@@ -1,8 +1,8 @@
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../common/config');
 
-module.exports = {
-  verifyToken: (req, res, next) => {
+class JwtMiddleware {
+  static verifyToken (req, res, next) {
     if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
       jsonwebtoken.verify(req.headers.authorization.split(' ')[1], config.jwt.secret, (err, decode) => {
         if (err) {
@@ -15,8 +15,9 @@ module.exports = {
       req.user = undefined;
       next();
     }
-  },
-  requireToken: (req, res, next) => {
+  }
+
+  static requireToken (req, res, next) {
     if (req.user) {
       next();
     } else {
@@ -30,4 +31,6 @@ module.exports = {
       return res.send(ret);
     }
   }
-};
+}
+
+module.exports = JwtMiddleware;
