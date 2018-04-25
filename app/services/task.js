@@ -286,6 +286,70 @@ class TaskService {
       });
     }
   }
+
+  /**
+   * Method responsible for removing a user from a Task
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
+  static removeMember (req, res, next) {
+    let ret;
+
+    if (req.params.task === undefined || req.params.username === undefined) {
+      res.status(400);
+      ret = {
+        error: {
+          code: 400,
+          message: 'Payload de request inválido.'
+        }
+      };
+      res.send(ret);
+    } else {
+      User.findOne({ username: req.params.username }, (err, user) => {
+        if (err) {
+          logger.error(err);
+          return next(new errors.InvalidContentError(err.errors.name.message));
+        }
+
+        if (user === null) {
+          ret = {
+            error: {
+              code: 400,
+              message: 'Este usuário não existe.'
+            }
+          };
+          res.status(400);
+          res.send(ret);
+          next();
+        } else {
+          Task.update(
+            { _id: req.params.task },
+            { $pull: { members: user._id } }, (errB, num) => {
+              if (errB) {
+                logger.error(errB);
+                return next(new errors.InvalidContentError(errB.errors.name.message));
+              }
+
+              if (num.nModified === 0) {
+                res.status(400);
+                ret = {
+                  error: {
+                    code: 400,
+                    message: 'Não foi encontrada uma Task com este ID.'
+                  }
+                };
+                res.send(ret);
+              } else {
+                res.status(200);
+                res.send(ret);
+              }
+            }
+          );
+        }
+      });
+    }
+  }
 }
 
 module.exports = TaskService;
