@@ -3,6 +3,7 @@ const errors = require('restify-errors');
 const logger = require('../common/logger');
 
 const Project = mongoose.model('Project');
+const User = mongoose.model('User');
 
 class ProjectService {
   /**
@@ -107,6 +108,134 @@ class ProjectService {
           res.send(ret);
           throw error;
         });
+    }
+  }
+
+  /**
+   * Method responsible for adding a user into a Project
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
+  static addMember (req, res, next) {
+    let ret;
+
+    if (req.params.project === undefined || req.params.username === undefined) {
+      res.status(400);
+      ret = {
+        error: {
+          code: 400,
+          message: 'Payload de request inválido.'
+        }
+      };
+      res.send(ret);
+    } else {
+      User.findOne({ username: req.params.username }, (err, user) => {
+        if (err) {
+          logger.error(err);
+          return next(new errors.InvalidContentError(err.errors.name.message));
+        }
+
+        if (user === null) {
+          ret = {
+            error: {
+              code: 400,
+              message: 'Este usuário não existe.'
+            }
+          };
+          res.status(400);
+          res.send(ret);
+          next();
+        } else {
+          Project.update(
+            { _id: req.params.project },
+            { $addToSet: { members: user._id } }, (errB, num) => {
+              if (errB) {
+                logger.error(errB);
+                return next(new errors.InvalidContentError(errB.errors.name.message));
+              }
+
+              if (num.nModified === 0) {
+                res.status(400);
+                ret = {
+                  error: {
+                    code: 400,
+                    message: 'Não foi encontrado um Projeto com este ID.'
+                  }
+                };
+                res.send(ret);
+              } else {
+                res.status(200);
+                res.send(ret);
+              }
+            }
+          );
+        }
+      });
+    }
+  }
+
+  /**
+   * Method responsible for removing a user from a Project
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
+  static removeMember (req, res, next) {
+    let ret;
+
+    if (req.params.project === undefined || req.params.username === undefined) {
+      res.status(400);
+      ret = {
+        error: {
+          code: 400,
+          message: 'Payload de request inválido.'
+        }
+      };
+      res.send(ret);
+    } else {
+      User.findOne({ username: req.params.username }, (err, user) => {
+        if (err) {
+          logger.error(err);
+          return next(new errors.InvalidContentError(err.errors.name.message));
+        }
+
+        if (user === null) {
+          ret = {
+            error: {
+              code: 400,
+              message: 'Este usuário não existe.'
+            }
+          };
+          res.status(400);
+          res.send(ret);
+          next();
+        } else {
+          Project.update(
+            { _id: req.params.project },
+            { $pull: { members: user._id } }, (errB, num) => {
+              if (errB) {
+                logger.error(errB);
+                return next(new errors.InvalidContentError(errB.errors.name.message));
+              }
+
+              if (num.nModified === 0) {
+                res.status(400);
+                ret = {
+                  error: {
+                    code: 400,
+                    message: 'Não foi encontrado um Projeto com este ID.'
+                  }
+                };
+                res.send(ret);
+              } else {
+                res.status(200);
+                res.send(ret);
+              }
+            }
+          );
+        }
+      });
     }
   }
 }
