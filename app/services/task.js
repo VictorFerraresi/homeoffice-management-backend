@@ -3,6 +3,7 @@ const errors = require('restify-errors');
 const logger = require('../common/logger');
 
 const Task = mongoose.model('Task');
+const Project = mongoose.model('Project');
 
 class TaskService {
   /**
@@ -22,6 +23,45 @@ class TaskService {
         res.send(tasks);
         next();
       });
+  }
+
+  /**
+   * Method responsible for returning all the Tasks of a Project as a RESTful webservice
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
+  static findByProject (req, res, next) {
+    Project.findOne({ name: req.params.project_name }, (err, proj) => {
+      if (err) {
+        logger.error(err);
+        return next(new errors.InvalidContentError(err.errors.name.message));
+      }
+
+      if (proj === null) {
+        const ret = {
+          error: {
+            code: 400,
+             message: 'Este projeto não existe.'
+          }
+        };
+        res.status(400);
+        res.send(ret);
+        next();
+      } else {
+        Task.find({ project: proj._id })
+          .populate('project')
+          .exec((err, tasks) => {
+            if (err) {
+              logger.error(err);
+              return next(new errors.InvalidContentError(err.errors.name.message));
+            }
+
+            res.send(tasks);
+            next();
+          });
+      }
+    });
   }
 
   /**
