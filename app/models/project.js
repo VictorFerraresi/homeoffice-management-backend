@@ -11,6 +11,11 @@ const ProjectSchema = new Schema({
     maxlen: 128,
     match: [/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9])*$/, 'invalid project name']
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: { createdAt: 'createdAt' } });
 
