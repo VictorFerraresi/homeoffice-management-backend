@@ -42,8 +42,14 @@ class ProjectService {
           return next(new errors.InvalidContentError(err.errors.name.message));
         }
 
-        res.send(project);
-        next();
+        if (project === null) {
+          res.status(400);
+          const ret = new ErrorResponse(400, 'Não existe nenhum projeto com este nome.');
+          res.send(ret.error);
+        } else {
+          res.send(project);
+          next();
+        }
       });
   }
 

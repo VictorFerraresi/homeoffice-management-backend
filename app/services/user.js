@@ -34,14 +34,20 @@ class UserService {
    * @param  {Function} next Next function to be called in the chain
    */
   static find (req, res, next) {
-    User.findOne({ username: req.params.username }, (err, doc) => {
+    User.findOne({ username: req.params.username }, (err, user) => {
       if (err) {
         logger.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
       }
 
-      res.send(doc);
-      next();
+      if (user === null) {
+        res.status(400);
+        const ret = new ErrorResponse(400, 'Não existe nenhum projeto com este nome.');
+        res.send(ret.error);
+      } else {
+        res.send(user);
+        next();
+      }
     });
   }
 
