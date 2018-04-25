@@ -18,7 +18,7 @@ const TaskSchema = new Schema({
     type: String,
     enum: ['unassigned', 'assigned', 'doing', 'done']
   },
-  project: { type: Schema.Types.ObjectId, ref: 'Project' },
+  project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: { createdAt: 'createdAt' } });
 
