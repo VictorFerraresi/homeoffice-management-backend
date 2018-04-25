@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const errors = require('restify-errors');
+const ErrorResponse = require('../error/error_response');
 const bcrypt = require('bcrypt-node');
 const jwt = require('jsonwebtoken');
 const config = require('../common/config');
@@ -55,24 +56,14 @@ class UserService {
 
     if (req.params.username === undefined || req.params.password === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       User.findOne({ username: req.params.username }).then((newUser) => {
         if (newUser === null) {
           res.status(203);
-          ret = {
-            error: {
-              code: 203,
-              message: 'Este usuário não existe.'
-            }
-          };
-          res.send(ret);
+          ret = new ErrorResponse(203, 'Este usuário não existe.');
+          res.send(ret.error);
         } else {
           // hashed password from database
           const hashedPassword = newUser.password;
@@ -97,13 +88,8 @@ class UserService {
               } else {
                 // password NOK
                 res.status(203);
-                ret = {
-                  error: {
-                    code: 203,
-                    message: 'Senha incorreta.'
-                  }
-                };
-                res.send(ret);
+                ret = new ErrorResponse(203, 'Senha incorreta.');
+                res.send(ret.error);
               }
             });
           } catch (exception) {
@@ -132,35 +118,20 @@ class UserService {
     if (req.params.username === undefined || req.params.password === undefined ||
     req.params.email === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
         .then((newUser) => {
           if (newUser !== null) {
             if (newUser.username === req.params.username) {
               res.status(203);
-              ret = {
-                error: {
-                  code: 203,
-                  message: 'Já existe um usuário com este login.'
-                }
-              };
-              res.send(ret);
+              ret = new ErrorResponse(203, 'Já existe um usuário com este login.');
+              res.send(ret.error);
             } else {
               res.status(203);
-              ret = {
-                error: {
-                  code: 203,
-                  message: 'Já existe um usuário com este e-mail.'
-                }
-              };
-              res.send(ret);
+              ret = new ErrorResponse(203, 'Já existe um usuário com este e-mail.');
+              res.send(ret.error);
             }
           } else {
             try {
@@ -177,37 +148,22 @@ class UserService {
                   res.send(ret);
                 } catch (error) {
                   res.status(500);
-                  ret = {
-                    error: {
-                      code: 500,
-                      message: 'Internal Server Error'
-                    }
-                  };
-                  res.send(ret);
+                  ret = new ErrorResponse(500, 'Internal Server Error.');
+                  res.send(ret.error);
                   throw error;
                 }
               });
             } catch (exception) {
               res.status(500);
-              ret = {
-                error: {
-                  code: 500,
-                  message: 'Internal Server Error'
-                }
-              };
-              res.send(ret);
+              ret = new ErrorResponse(500, 'Internal Server Error.');
+              res.send(ret.error);
               throw exception;
             }
           }
         }).catch((error) => {
           res.status(500);
-          ret = {
-            error: {
-              code: 500,
-              message: 'Internal Server Error'
-            }
-          };
-          res.send(ret);
+          ret = new ErrorResponse(500, 'Internal Server Error.');
+          res.send(ret.error);
           throw error;
         });
     }

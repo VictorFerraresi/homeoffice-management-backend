@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const errors = require('restify-errors');
+const ErrorResponse = require('../error/error_response');
 const logger = require('../common/logger');
 
 const Project = mongoose.model('Project');
@@ -57,25 +58,15 @@ class ProjectService {
 
     if (req.params.name === undefined || req.params.createdBy === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       Project.findOne({ name: req.params.name })
         .then((newProject) => {
           if (newProject !== null) {
             res.status(203);
-            ret = {
-              error: {
-                code: 203,
-                message: 'Já existe um projeto com este nome.'
-              }
-            };
-            res.send(ret);
+            ret = new ErrorResponse(203, 'Já existe um projeto com este nome.');
+            res.send(ret.error);
           } else {
             const proj = new Project({
               name: req.params.name,
@@ -87,25 +78,15 @@ class ProjectService {
               res.send(ret);
             } catch (error) {
               res.status(500);
-              ret = {
-                error: {
-                  code: 500,
-                  message: 'Internal Server Error'
-                }
-              };
-              res.send(ret);
+              ret = new ErrorResponse(500, 'Internal Server Error.');
+              res.send(ret.error);
               throw error;
             }
           }
         }).catch((error) => {
           res.status(500);
-          ret = {
-            error: {
-              code: 500,
-              message: 'Internal Server Error'
-            }
-          };
-          res.send(ret);
+          ret = new ErrorResponse(500, 'Internal Server Error.');
+          res.send(ret.error);
           throw error;
         });
     }
@@ -122,13 +103,8 @@ class ProjectService {
 
     if (req.params.project === undefined || req.params.username === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       User.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
@@ -137,14 +113,9 @@ class ProjectService {
         }
 
         if (user === null) {
-          ret = {
-            error: {
-              code: 400,
-              message: 'Este usuário não existe.'
-            }
-          };
           res.status(400);
-          res.send(ret);
+          ret = new ErrorResponse(400, 'Este usuário não existe.');
+          res.send(ret.error);
           next();
         } else {
           Project.update(
@@ -157,13 +128,8 @@ class ProjectService {
 
               if (num.nModified === 0) {
                 res.status(400);
-                ret = {
-                  error: {
-                    code: 400,
-                    message: 'Não foi encontrado um Projeto com este ID.'
-                  }
-                };
-                res.send(ret);
+                ret = new ErrorResponse(400, 'Não foi encontrado um Projeto com este ID.');
+                res.send(ret.error);
               } else {
                 res.status(200);
                 res.send(ret);
@@ -186,13 +152,8 @@ class ProjectService {
 
     if (req.params.project === undefined || req.params.username === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       User.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
@@ -201,14 +162,9 @@ class ProjectService {
         }
 
         if (user === null) {
-          ret = {
-            error: {
-              code: 400,
-              message: 'Este usuário não existe.'
-            }
-          };
           res.status(400);
-          res.send(ret);
+          ret = new ErrorResponse(400, 'Este usuário não existe.');
+          res.send(ret.error);
           next();
         } else {
           Project.update(
@@ -221,13 +177,8 @@ class ProjectService {
 
               if (num.nModified === 0) {
                 res.status(400);
-                ret = {
-                  error: {
-                    code: 400,
-                    message: 'Não foi encontrado um Projeto com este ID.'
-                  }
-                };
-                res.send(ret);
+                ret = new ErrorResponse(400, 'Não foi encontrado um projeto com este ID.');
+                res.send(ret.error);
               } else {
                 res.status(200);
                 res.send(ret);

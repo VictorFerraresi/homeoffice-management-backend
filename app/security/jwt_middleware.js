@@ -1,4 +1,5 @@
 const jsonwebtoken = require('jsonwebtoken');
+const ErrorResponse = require('../error/error_response');
 const config = require('../common/config');
 
 class JwtMiddleware {
@@ -34,13 +35,8 @@ class JwtMiddleware {
       next();
     } else {
       res.status(401);
-      const ret = {
-        error: {
-          code: 401,
-          message: 'Usuário não autenticado (JWT).'
-        }
-      };
-      return res.send(ret);
+      const ret = new ErrorResponse(401, 'Usuário não autenticado (JWT).');
+      return res.send(ret.error);
     }
   }
 }

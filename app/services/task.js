@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const errors = require('restify-errors');
+const ErrorResponse = require('../error/error_response');
 const logger = require('../common/logger');
 
 const Task = mongoose.model('Task');
@@ -40,14 +41,9 @@ class TaskService {
       }
 
       if (proj === null) {
-        const ret = {
-          error: {
-            code: 400,
-            message: 'Este projeto não existe.'
-          }
-        };
         res.status(400);
-        res.send(ret);
+        const ret = new ErrorResponse(400, 'Este Projeto não existe.');
+        res.send(ret.error);
         next();
       } else {
         Task.find({ project: proj._id })
@@ -77,25 +73,15 @@ class TaskService {
     if (req.params.name === undefined || req.params.priority === undefined ||
      req.params.project === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       Task.findOne({ name: req.params.name, project: req.params.project })
         .then((newTask) => {
           if (newTask !== null) {
             res.status(203);
-            ret = {
-              error: {
-                code: 203,
-                message: 'Já existe uma task com este nome neste projeto.'
-              }
-            };
-            res.send(ret);
+            ret = new ErrorResponse(203, 'Já existe uma task com este nome neste projeto.');
+            res.send(ret.error);
           } else {
             const task = new Task({
               name: req.params.name,
@@ -109,25 +95,15 @@ class TaskService {
               res.send(ret);
             } catch (error) {
               res.status(500);
-              ret = {
-                error: {
-                  code: 500,
-                  message: 'Internal Server Error'
-                }
-              };
-              res.send(ret);
+              ret = new ErrorResponse(500, 'Internal Server Error.');
+              res.send(ret.error);
               throw error;
             }
           }
         }).catch((error) => {
           res.status(500);
-          ret = {
-            error: {
-              code: 500,
-              message: 'Internal Server Error'
-            }
-          };
-          res.send(ret);
+          ret = new ErrorResponse(500, 'Internal Server Error.');
+          res.send(ret.error);
           throw error;
         });
     }
@@ -144,13 +120,8 @@ class TaskService {
 
     if (req.params.task === undefined || req.params.priority === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       Task.update(
         { _id: req.params.task },
@@ -162,13 +133,8 @@ class TaskService {
 
           if (num.nModified === 0) {
             res.status(400);
-            ret = {
-              error: {
-                code: 400,
-                message: 'Não foi encontrada uma Task com este ID.'
-              }
-            };
-            res.send(ret);
+            ret = new ErrorResponse(400, 'Não foi encontrada uma Task com este ID.');
+            res.send(ret.error);
           } else {
             res.status(200);
             res.send(ret);
@@ -189,13 +155,8 @@ class TaskService {
 
     if (req.params.task === undefined || req.params.status === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       Task.update(
         { _id: req.params.task },
@@ -207,13 +168,8 @@ class TaskService {
 
           if (num.nModified === 0) {
             res.status(400);
-            ret = {
-              error: {
-                code: 400,
-                message: 'Não foi encontrada uma Task com este ID.'
-              }
-            };
-            res.send(ret);
+            ret = new ErrorResponse(400, 'Não foi encontrada uma Task com este ID.');
+            res.send(ret.error);
           } else {
             res.status(200);
             res.send(ret);
@@ -234,13 +190,8 @@ class TaskService {
 
     if (req.params.task === undefined || req.params.username === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       User.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
@@ -249,14 +200,9 @@ class TaskService {
         }
 
         if (user === null) {
-          ret = {
-            error: {
-              code: 400,
-              message: 'Este usuário não existe.'
-            }
-          };
           res.status(400);
-          res.send(ret);
+          ret = new ErrorResponse(400, 'Este usuário não existe.');
+          res.send(ret.error);
           next();
         } else {
           Task.update(
@@ -269,13 +215,8 @@ class TaskService {
 
               if (num.nModified === 0) {
                 res.status(400);
-                ret = {
-                  error: {
-                    code: 400,
-                    message: 'Não foi encontrada uma Task com este ID.'
-                  }
-                };
-                res.send(ret);
+                ret = new ErrorResponse(400, 'Não foi encontrada uma Task com este ID.');
+                res.send(ret.error);
               } else {
                 res.status(200);
                 res.send(ret);
@@ -298,13 +239,8 @@ class TaskService {
 
     if (req.params.task === undefined || req.params.username === undefined) {
       res.status(400);
-      ret = {
-        error: {
-          code: 400,
-          message: 'Payload de request inválido.'
-        }
-      };
-      res.send(ret);
+      ret = new ErrorResponse(400, 'Payload de request inválido.');
+      res.send(ret.error);
     } else {
       User.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
@@ -313,14 +249,9 @@ class TaskService {
         }
 
         if (user === null) {
-          ret = {
-            error: {
-              code: 400,
-              message: 'Este usuário não existe.'
-            }
-          };
           res.status(400);
-          res.send(ret);
+          ret = new ErrorResponse(400, 'Este usuário não existe.');
+          res.send(ret.error);
           next();
         } else {
           Task.update(
@@ -333,13 +264,8 @@ class TaskService {
 
               if (num.nModified === 0) {
                 res.status(400);
-                ret = {
-                  error: {
-                    code: 400,
-                    message: 'Não foi encontrada uma Task com este ID.'
-                  }
-                };
-                res.send(ret);
+                ret = new ErrorResponse(400, 'Não foi encontrada uma Task com este ID.');
+                res.send(ret.error);
               } else {
                 res.status(200);
                 res.send(ret);
