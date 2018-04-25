@@ -12,15 +12,17 @@ class ProjectService {
    * @param  {Function} next Next function to be called in the chain
    */
   static getAll (req, res, next) {
-    Project.find({}, (err, projects) => {
-      if (err) {
-        logger.error(err);
-        return next(new errors.InvalidContentError(err.errors.name.message));
-      }
+    Project.find({})
+      .populate('createdBy')
+      .exec((err, projects) => {
+        if (err) {
+          logger.error(err);
+          return next(new errors.InvalidContentError(err.errors.name.message));
+        }
 
-      res.send(projects);
-      next();
-    });
+        res.send(projects);
+        next();
+      });
   }
 
   /**
@@ -30,15 +32,17 @@ class ProjectService {
    * @param  {Function} next Next function to be called in the chain
    */
   static find (req, res, next) {
-    Project.findOne({ name: req.params.project_name }, (err, project) => {
-      if (err) {
-        logger.error(err);
-        return next(new errors.InvalidContentError(err.errors.name.message));
-      }
+    Project.findOne({ name: req.params.project_name })
+      .populate('createdBy')
+      .exec((err, project) => {
+        if (err) {
+          logger.error(err);
+          return next(new errors.InvalidContentError(err.errors.name.message));
+        }
 
-      res.send(project);
-      next();
-    });
+        res.send(project);
+        next();
+      });
   }
 
   /**
