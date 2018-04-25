@@ -6,14 +6,12 @@ const TaskSchema = new Schema({
   name: {
     type: String,
     required: true,
-    index: { unique: true },
     minlen: 5,
     maxlen: 128
   },
   priority: {
     type: String,
     required: true,
-    index: { unique: true }
   },
   project:
   { type: Schema.Types.ObjectId, ref: 'Project' }
