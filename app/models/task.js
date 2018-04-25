@@ -11,7 +11,12 @@ const TaskSchema = new Schema({
   },
   priority: {
     type: String,
-    required: true
+    required: true,
+    enum: ['low', 'medium', 'high', 'ultra']
+  },
+  status: {
+    type: String,
+    enum: ['unassigned', 'assigned', 'doing', 'done']
   },
   project: { type: Schema.Types.ObjectId, ref: 'Project' },
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
