@@ -42,7 +42,7 @@ class TaskService {
         const ret = {
           error: {
             code: 400,
-             message: 'Este projeto não existe.'
+            message: 'Este projeto não existe.'
           }
         };
         res.status(400);
@@ -51,10 +51,10 @@ class TaskService {
       } else {
         Task.find({ project: proj._id })
           .populate('project')
-          .exec((err, tasks) => {
-            if (err) {
-              logger.error(err);
-              return next(new errors.InvalidContentError(err.errors.name.message));
+          .exec((errB, tasks) => {
+            if (errB) {
+              logger.error(errB);
+              return next(new errors.InvalidContentError(errB.errors.name.message));
             }
 
             res.send(tasks);
