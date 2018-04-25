@@ -8,8 +8,7 @@ const TaskSchema = new Schema({
     required: true,
     index: { unique: true },
     minlen: 5,
-    maxlen: 128,
-    match: [/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9])*$/, 'invalid project name']
+    maxlen: 128
   },
   priority: {
     type: String,
