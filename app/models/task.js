@@ -13,8 +13,8 @@ const TaskSchema = new Schema({
     type: String,
     required: true
   },
-  project:
-  { type: Schema.Types.ObjectId, ref: 'Project' }
+  project: { type: Schema.Types.ObjectId, ref: 'Project' },
+  members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: { createdAt: 'createdAt' } });
 
 class Task {
