@@ -5,4 +5,6 @@ const routerInstance = new Router();
 
 routerInstance.get('/tasks', TaskService.getAll);
 
+routerInstance.post('/tasks', TaskService.createNew);
+
 module.exports = routerInstance;

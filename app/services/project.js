@@ -46,7 +46,7 @@ class ProjectService {
   }
 
   /**
-   * Method responsible for inserting a new Projects in the database
+   * Method responsible for inserting a new Project in the database
    * @param  {Object}   req  HTTP Request
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
