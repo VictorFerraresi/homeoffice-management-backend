@@ -131,6 +131,96 @@ class TaskService {
         });
     }
   }
+
+  /**
+   * Method responsible for changing a Task's priority
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
+  static setPriority (req, res, next) {
+    let ret;
+
+    if (req.params.task === undefined || req.params.priority === undefined) {
+      res.status(400);
+      ret = {
+        error: {
+          code: 400,
+          message: 'Payload de request inválido.'
+        }
+      };
+      res.send(ret);
+    } else {
+      Task.update(
+        { _id: req.params.task },
+        { $set: { priority: req.params.priority } }, (err, num) => {
+          if (err) {
+            logger.error(err);
+            return next(new errors.InvalidContentError(err.errors.name.message));
+          }
+
+          if (num.nModified === 0) {
+            res.status(400);
+            ret = {
+              error: {
+                code: 400,
+                message: 'Não foi encontrada uma Task com este ID.'
+              }
+            };
+            res.send(ret);
+          } else {
+            res.status(200);
+            res.send(ret);
+          }
+        }
+      );
+    }
+  }
+
+  /**
+   * Method responsible for changing a Task's status
+   * @param  {Object}   req  HTTP Request
+   * @param  {Object}   res  HTTP Response
+   * @param  {Function} next Next function to be called in the chain
+   */
+  static setStatus (req, res, next) {
+    let ret;
+
+    if (req.params.task === undefined || req.params.status === undefined) {
+      res.status(400);
+      ret = {
+        error: {
+          code: 400,
+          message: 'Payload de request inválido.'
+        }
+      };
+      res.send(ret);
+    } else {
+      Task.update(
+        { _id: req.params.task },
+        { $set: { status: req.params.status } }, (err, num) => {
+          if (err) {
+            logger.error(err);
+            return next(new errors.InvalidContentError(err.errors.name.message));
+          }
+
+          if (num.nModified === 0) {
+            res.status(400);
+            ret = {
+              error: {
+                code: 400,
+                message: 'Não foi encontrada uma Task com este ID.'
+              }
+            };
+            res.send(ret);
+          } else {
+            res.status(200);
+            res.send(ret);
+          }
+        }
+      );
+    }
+  }
 }
 
 module.exports = TaskService;

@@ -7,5 +7,7 @@ routerInstance.get('/tasks', TaskService.getAll);
 routerInstance.get('/tasks/:project_name', TaskService.findByProject);
 
 routerInstance.post('/tasks', TaskService.createNew);
+routerInstance.post('/tasks/setPriority/', TaskService.setPriority);
+routerInstance.post('/tasks/setStatus/', TaskService.setStatus);
 
 module.exports = routerInstance;
