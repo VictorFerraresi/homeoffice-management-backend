@@ -48,7 +48,62 @@ class ProjectService {
    * @param  {Function} next Next function to be called in the chain
    */
   static createNew (req, res, next) {
-    // TODO
+    let ret;
+
+    if (req.params.name === undefined || req.params.createdBy === undefined) {
+      res.status(400);
+      ret = {
+        error: {
+          code: 400,
+          message: 'Payload de request inválido.'
+        }
+      };
+      res.send(ret);
+    } else {
+      Project.findOne({ name: req.params.name })
+        .then((newProject) => {
+          if (newProject !== null) {
+            res.status(203);
+            ret = {
+              error: {
+                code: 203,
+                message: 'Já existe um projeto com este nome.'
+              }
+            };
+            res.send(ret);
+          } else {
+            const proj = new Project({
+              name: req.params.name,
+              createdBy: mongoose.mongo.ObjectId(req.params.createdBy)
+            });
+            try {
+              proj.save();
+              res.status(200);
+              res.send(ret);
+            } catch (error) {
+              res.status(500);
+              ret = {
+                error: {
+                  code: 500,
+                  message: 'Internal Server Error'
+                }
+              };
+              res.send(ret);
+              throw error;
+            }
+          }
+        }).catch((error) => {
+          res.status(500);
+          ret = {
+            error: {
+              code: 500,
+              message: 'Internal Server Error'
+            }
+          };
+          res.send(ret);
+          throw error;
+        });
+    }
   }
 }
 
