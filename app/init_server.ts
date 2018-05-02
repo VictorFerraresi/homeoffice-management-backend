@@ -1,10 +1,10 @@
-const config = require('./common/config');
-const restify = require('restify');
-const mongoose = require('mongoose');
-const restifyPlugins = require('restify-plugins');
-const logger = require('./common/logger');
-const corsMiddleware = require('restify-cors-middleware');
-const jwtMiddleware = require('./security/jwt_middleware');
+import { config } from "./common/config";
+import * as restify from "restify";
+import * as Mongoose from "mongoose";
+import * as restifyPlugins from "restify-plugins";
+import { logger } from "./common/logger";
+import * as corsMiddleware from "restify-cors-middleware";
+import { JwtMiddleware } from "./security/jwt-middleware";
 
 const cors = corsMiddleware({
   preflightMaxAge: 5,
@@ -29,7 +29,7 @@ server.use(restifyPlugins.jsonBodyParser({ mapParams: true }));
 server.use(restifyPlugins.acceptParser(server.acceptable));
 server.use(restifyPlugins.queryParser({ mapParams: true }));
 server.use(restifyPlugins.fullResponse());
-server.use(jwtMiddleware.verifyToken);
+server.use(JwtMiddleware.verifyToken);
 
 const prefix = `${config.prefix}/${config.api.version}`;
 
@@ -38,7 +38,7 @@ projectRouter.applyRoutes(server, prefix);
 tasksRouter.applyRoutes(server, prefix);
 
 server.listen(config.port, () => {
-  const db = mongoose.connection;
+  const db = Mongoose.connection;
 
   db.on('error', (err) => {
     logger.error(err);

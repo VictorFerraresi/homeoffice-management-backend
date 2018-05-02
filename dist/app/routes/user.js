@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const { Router } = require('restify-router');
+const user_1 = require("../services/user");
+const routerInstance = new Router();
+routerInstance.get('/users', user_1.UserService.getAll);
+routerInstance.get('/users/:username', user_1.UserService.find);
+routerInstance.post('/login', user_1.UserService.validatePassword);
+routerInstance.post('/register', user_1.UserService.tryRegister);
+module.exports = routerInstance;

@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const { Router } = require('restify-router');
+const project_1 = require("../services/project");
+const routerInstance = new Router();
+routerInstance.get('/projects', project_1.ProjectService.getAll);
+routerInstance.get('/projects/:project_name', project_1.ProjectService.find);
+routerInstance.post('/projects', project_1.ProjectService.createNew);
+routerInstance.post('/projects/addMember/', project_1.ProjectService.addMember);
+routerInstance.post('/projects/removeMember/', project_1.ProjectService.removeMember);
+module.exports = routerInstance;

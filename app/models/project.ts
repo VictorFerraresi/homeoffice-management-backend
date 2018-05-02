@@ -1,8 +1,13 @@
-const mongoose = require('mongoose');
+import { Document, Schema, model, Model } from "mongoose";
+import { IUser } from "./user";
 
-const { Schema } = mongoose;
+export interface IProject extends Document {
+  name: string,
+  createdBy: IUser, 
+  members?: IUser[]
+}
 
-const ProjectSchema = new Schema({
+export const ProjectSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -18,11 +23,4 @@ const ProjectSchema = new Schema({
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: { createdAt: 'createdAt' } });
 
-class Project {
-
-}
-
-module.exports = () => {
-  ProjectSchema.loadClass(Project);
-  return mongoose.model('Project', ProjectSchema);
-};
+export const Project = model<IProject>("Project", ProjectSchema);

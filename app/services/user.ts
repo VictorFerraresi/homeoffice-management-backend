@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
-const errors = require('restify-errors');
-const ErrorResponse = require('../error/error_response');
-const bcrypt = require('bcrypt-node');
-const jwt = require('jsonwebtoken');
-const config = require('../common/config');
-const logger = require('../common/logger');
+import * as Mongoose from "mongoose";
+import * as errors from "restify-errors";
+import { ErrorResponse } from "../error/error-response";
+import { logger } from "../common/logger";
+import { config } from "../common/config";
+import * as bcrypt from "bcrypt-node";
+import * as jwt from "jsonwebtoken";
 
-const User = mongoose.model('User');
+const User = Mongoose.model('User');
 
-class UserService {
+export class UserService {
   /**
    * Method responsible for returning all the Users in the database as a RESTful webservice
    * @param  {Object}   req  HTTP Request
@@ -65,7 +65,7 @@ class UserService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }).then((newUser) => {
+      User.findOne({ username: req.params.username }).then((newUser: any) => {
         if (newUser === null) {
           res.status(203);
           ret = new ErrorResponse(203, 'Este usuário não existe.');
@@ -128,7 +128,7 @@ class UserService {
       res.send(ret.error);
     } else {
       User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
-        .then((newUser) => {
+        .then((newUser: any) => {
           if (newUser !== null) {
             if (newUser.username === req.params.username) {
               res.status(203);
@@ -175,5 +175,3 @@ class UserService {
     }
   }
 }
-
-module.exports = UserService;

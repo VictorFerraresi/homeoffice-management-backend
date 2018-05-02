@@ -1,8 +1,8 @@
-const jsonwebtoken = require('jsonwebtoken');
-const ErrorResponse = require('../error/error_response');
-const config = require('../common/config');
+import * as jsonwebtoken from "jsonwebtoken";
+import { ErrorResponse } from "../error/error-response";
+import { config } from "../common/config";
 
-class JwtMiddleware {
+export class JwtMiddleware {
   /**
    * Method responsible for verifying if a JWT token is valid
    * @param  {Object}   req  HTTP Request
@@ -40,5 +40,3 @@ class JwtMiddleware {
     }
   }
 }
-
-module.exports = JwtMiddleware;

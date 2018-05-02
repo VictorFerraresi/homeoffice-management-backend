@@ -1,5 +1,6 @@
 const { Router } = require('restify-router');
-const UserService = require('../services/user');
+
+import { UserService } from '../services/user';
 
 const routerInstance = new Router();
 

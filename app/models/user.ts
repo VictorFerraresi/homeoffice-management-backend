@@ -1,17 +1,29 @@
-const mongoose = require('mongoose');
+import { Document, Schema, model, Model } from "mongoose";
+import { ObjectId } from "bson";
 
-const { Schema } = mongoose;
+export interface IUserAttribute extends Document {
+  user_id: ObjectId,
+  attribute: string
+}
 
-const UserAttributeSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
+export const UserAttributeSchema = new Schema({
+  user_id: { type: Schema.Types.ObjectId, ref: 'User', index: true },
   attribute: {
     type: String,
-    enum: ['active', 'banned', 'moderator', 'admin']
+    enum: ['active', 'banned', 'moderator', 'admin'],
+    index: true
   },
   expiresAt: Date
 }, { timestamps: { createdAt: 'createdAt' } });
 
-const UserSchema = new Schema({
+export interface IUser extends Document {
+  username: string,
+  email: string, 
+  password: string,
+  attributes?: IUserAttribute[]
+}
+
+export const UserSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -38,14 +50,5 @@ UserSchema.virtual('attributes', {
   justOne: false
 });
 
-class User {
-
-}
-
-module.exports = () => {
-  UserAttributeSchema.index({ user: 1, attribute: 1 }, { unique: true });
-  mongoose.model('UserAttribute', UserAttributeSchema);
-
-  UserSchema.loadClass(User);
-  return mongoose.model('User', UserSchema);
-};
+export const UserAttribute = model<IUserAttribute>("UserAttribute", UserAttributeSchema);
+export const User = model<IUser>("User", UserSchema);

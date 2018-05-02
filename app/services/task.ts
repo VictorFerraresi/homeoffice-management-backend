@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
-const errors = require('restify-errors');
-const ErrorResponse = require('../error/error_response');
-const logger = require('../common/logger');
+import * as Mongoose from "mongoose";
+import * as errors from "restify-errors";
+import { ErrorResponse } from "../error/error-response";
+import { logger } from "../common/logger";
 
-const Task = mongoose.model('Task');
-const Project = mongoose.model('Project');
-const User = mongoose.model('User');
+const Task = Mongoose.model('Task');
+const Project = Mongoose.model('Project');
+const User = Mongoose.model('User');
 
-class TaskService {
+export class TaskService {
   /**
    * Method responsible for returning all the Tasks in the database as a RESTful webservice
    * @param  {Object}   req  HTTP Request
@@ -86,7 +86,7 @@ class TaskService {
             const task = new Task({
               name: req.params.name,
               priority: req.params.priority,
-              project: mongoose.mongo.ObjectId(req.params.project),
+              project: new Mongoose.mongo.ObjectId(req.params.project),
               status: 'unassigned'
             });
             try {
@@ -277,5 +277,3 @@ class TaskService {
     }
   }
 }
-
-module.exports = TaskService;

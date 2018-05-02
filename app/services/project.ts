@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
-const errors = require('restify-errors');
-const ErrorResponse = require('../error/error_response');
-const logger = require('../common/logger');
+import * as Mongoose from "mongoose";
+import * as errors from "restify-errors";
+import { ErrorResponse } from "../error/error-response";
+import { logger } from "../common/logger";
 
-const Project = mongoose.model('Project');
-const User = mongoose.model('User');
+const Project = Mongoose.model('Project');
+const User = Mongoose.model('User');
 
-class ProjectService {
+export class ProjectService {
   /**
    * Method responsible for returning all the Projects in the database as a RESTful webservice
    * @param  {Object}   req  HTTP Request
@@ -76,7 +76,7 @@ class ProjectService {
           } else {
             const proj = new Project({
               name: req.params.name,
-              createdBy: mongoose.mongo.ObjectId(req.params.createdBy)
+              createdBy: new Mongoose.mongo.ObjectId(req.params.createdBy)
             });
             try {
               proj.save();
@@ -196,5 +196,3 @@ class ProjectService {
     }
   }
 }
-
-module.exports = ProjectService;

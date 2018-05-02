@@ -1,8 +1,16 @@
-const mongoose = require('mongoose');
+import { Document, Schema, model, Model } from "mongoose";
+import { ObjectId } from "bson";
+import { IUser } from "./user";
 
-const { Schema } = mongoose;
+export interface ITask extends Document {
+  name: string,
+  priority: string,
+  status: string,
+  project: ObjectId,
+  members?: IUser[]
+}
 
-const TaskSchema = new Schema({
+export const TaskSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -22,11 +30,4 @@ const TaskSchema = new Schema({
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 }, { timestamps: { createdAt: 'createdAt' } });
 
-class Task {
-
-}
-
-module.exports = () => {
-  TaskSchema.loadClass(Task);
-  return mongoose.model('Task', TaskSchema);
-};
+export const Task = model<ITask>("Task", TaskSchema);

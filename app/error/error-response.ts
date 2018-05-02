@@ -1,4 +1,7 @@
-class ErrorResponse {
+export class ErrorResponse {
+  private code: Number;
+  private msg: String;
+  
   constructor (code, msg) {
     this.code = code;
     this.msg = msg;
@@ -11,5 +14,3 @@ class ErrorResponse {
     };
   }
 }
-
-module.exports = ErrorResponse;
