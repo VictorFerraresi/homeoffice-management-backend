@@ -1,4 +1,3 @@
-import * as Mongoose from "mongoose";
 import * as errors from "restify-errors";
 import { ErrorResponse } from "../error/error-response";
 import { logger } from "../common/logger";

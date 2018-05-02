@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Mongoose = require("mongoose");
+const mongoose_1 = require("mongoose");
 const errors = require("restify-errors");
 const error_response_1 = require("../error/error-response");
 const logger_1 = require("../common/logger");
@@ -74,7 +74,7 @@ class ProjectService {
                 else {
                     const proj = new project_1.Project({
                         name: req.params.name,
-                        createdBy: new Mongoose.mongo.ObjectId(req.params.createdBy)
+                        createdBy: new mongoose_1.mongo.ObjectId(req.params.createdBy)
                     });
                     try {
                         proj.save();

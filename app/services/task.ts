@@ -1,4 +1,4 @@
-import * as Mongoose from "mongoose";
+import { mongo } from "mongoose";
 import * as errors from "restify-errors";
 import { ErrorResponse } from "../error/error-response";
 import { logger } from "../common/logger";
@@ -85,7 +85,7 @@ export class TaskService {
             const task = new Task({
               name: req.params.name,
               priority: req.params.priority,
-              project: new Mongoose.mongo.ObjectId(req.params.project),
+              project: new mongo.ObjectId(req.params.project),
               status: 'unassigned'
             });
             try {

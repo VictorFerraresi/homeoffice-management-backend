@@ -1,4 +1,4 @@
-import * as Mongoose from "mongoose";
+import { mongo } from "mongoose";
 import * as errors from "restify-errors";
 import { ErrorResponse } from "../error/error-response";
 import { logger } from "../common/logger";
@@ -75,7 +75,7 @@ export class ProjectService {
           } else {
             const proj = new Project({
               name: req.params.name,
-              createdBy: new Mongoose.mongo.ObjectId(req.params.createdBy)
+              createdBy: new mongo.ObjectId(req.params.createdBy)
             });
             try {
               proj.save();

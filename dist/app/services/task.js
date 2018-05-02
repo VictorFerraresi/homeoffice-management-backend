@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Mongoose = require("mongoose");
+const mongoose_1 = require("mongoose");
 const errors = require("restify-errors");
 const error_response_1 = require("../error/error-response");
 const logger_1 = require("../common/logger");
@@ -84,7 +84,7 @@ class TaskService {
                     const task = new task_1.Task({
                         name: req.params.name,
                         priority: req.params.priority,
-                        project: new Mongoose.mongo.ObjectId(req.params.project),
+                        project: new mongoose_1.mongo.ObjectId(req.params.project),
                         status: 'unassigned'
                     });
                     try {
