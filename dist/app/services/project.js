@@ -4,8 +4,8 @@ const Mongoose = require("mongoose");
 const errors = require("restify-errors");
 const error_response_1 = require("../error/error-response");
 const logger_1 = require("../common/logger");
-const Project = Mongoose.model('Project');
-const User = Mongoose.model('User');
+const project_1 = require("../models/project");
+const user_1 = require("../models/user");
 class ProjectService {
     /**
      * Method responsible for returning all the Projects in the database as a RESTful webservice
@@ -14,7 +14,7 @@ class ProjectService {
      * @param  {Function} next Next function to be called in the chain
      */
     static getAll(req, res, next) {
-        Project.find({})
+        project_1.Project.find({})
             .populate('createdBy')
             .exec((err, projects) => {
             if (err) {
@@ -32,7 +32,7 @@ class ProjectService {
      * @param  {Function} next Next function to be called in the chain
      */
     static find(req, res, next) {
-        Project.findOne({ name: req.params.project_name })
+        project_1.Project.findOne({ name: req.params.project_name })
             .populate('createdBy')
             .exec((err, project) => {
             if (err) {
@@ -64,7 +64,7 @@ class ProjectService {
             res.send(ret.error);
         }
         else {
-            Project.findOne({ name: req.params.name })
+            project_1.Project.findOne({ name: req.params.name })
                 .then((newProject) => {
                 if (newProject !== null) {
                     res.status(203);
@@ -72,7 +72,7 @@ class ProjectService {
                     res.send(ret.error);
                 }
                 else {
-                    const proj = new Project({
+                    const proj = new project_1.Project({
                         name: req.params.name,
                         createdBy: new Mongoose.mongo.ObjectId(req.params.createdBy)
                     });
@@ -110,7 +110,7 @@ class ProjectService {
             res.send(ret.error);
         }
         else {
-            User.findOne({ username: req.params.username }, (err, user) => {
+            user_1.User.findOne({ username: req.params.username }, (err, user) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -122,7 +122,7 @@ class ProjectService {
                     next();
                 }
                 else {
-                    Project.update({ _id: req.params.project }, { $addToSet: { members: user._id } }, (errB, num) => {
+                    project_1.Project.update({ _id: req.params.project }, { $addToSet: { members: user._id } }, (errB, num) => {
                         if (errB) {
                             logger_1.logger.error(errB);
                             return next(new errors.InvalidContentError(errB.errors.name.message));
@@ -155,7 +155,7 @@ class ProjectService {
             res.send(ret.error);
         }
         else {
-            User.findOne({ username: req.params.username }, (err, user) => {
+            user_1.User.findOne({ username: req.params.username }, (err, user) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -167,7 +167,7 @@ class ProjectService {
                     next();
                 }
                 else {
-                    Project.update({ _id: req.params.project }, { $pull: { members: user._id } }, (errB, num) => {
+                    project_1.Project.update({ _id: req.params.project }, { $pull: { members: user._id } }, (errB, num) => {
                         if (errB) {
                             logger_1.logger.error(errB);
                             return next(new errors.InvalidContentError(errB.errors.name.message));

@@ -4,9 +4,9 @@ const Mongoose = require("mongoose");
 const errors = require("restify-errors");
 const error_response_1 = require("../error/error-response");
 const logger_1 = require("../common/logger");
-const Task = Mongoose.model('Task');
-const Project = Mongoose.model('Project');
-const User = Mongoose.model('User');
+const task_1 = require("../models/task");
+const project_1 = require("../models/project");
+const user_1 = require("../models/user");
 class TaskService {
     /**
      * Method responsible for returning all the Tasks in the database as a RESTful webservice
@@ -15,7 +15,7 @@ class TaskService {
      * @param  {Function} next Next function to be called in the chain
      */
     static getAll(req, res, next) {
-        Task.find({})
+        task_1.Task.find({})
             .populate('project')
             .exec((err, tasks) => {
             if (err) {
@@ -33,7 +33,7 @@ class TaskService {
      * @param  {Function} next Next function to be called in the chain
      */
     static findByProject(req, res, next) {
-        Project.findOne({ name: req.params.project_name }, (err, proj) => {
+        project_1.Project.findOne({ name: req.params.project_name }, (err, proj) => {
             if (err) {
                 logger_1.logger.error(err);
                 return next(new errors.InvalidContentError(err.errors.name.message));
@@ -45,7 +45,7 @@ class TaskService {
                 next();
             }
             else {
-                Task.find({ project: proj._id })
+                task_1.Task.find({ project: proj._id })
                     .populate('project')
                     .exec((errB, tasks) => {
                     if (errB) {
@@ -73,7 +73,7 @@ class TaskService {
             res.send(ret.error);
         }
         else {
-            Task.findOne({ name: req.params.name, project: req.params.project })
+            task_1.Task.findOne({ name: req.params.name, project: req.params.project })
                 .then((newTask) => {
                 if (newTask !== null) {
                     res.status(203);
@@ -81,7 +81,7 @@ class TaskService {
                     res.send(ret.error);
                 }
                 else {
-                    const task = new Task({
+                    const task = new task_1.Task({
                         name: req.params.name,
                         priority: req.params.priority,
                         project: new Mongoose.mongo.ObjectId(req.params.project),
@@ -121,7 +121,7 @@ class TaskService {
             res.send(ret.error);
         }
         else {
-            Task.update({ _id: req.params.task }, { $set: { priority: req.params.priority } }, (err, num) => {
+            task_1.Task.update({ _id: req.params.task }, { $set: { priority: req.params.priority } }, (err, num) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -152,7 +152,7 @@ class TaskService {
             res.send(ret.error);
         }
         else {
-            Task.update({ _id: req.params.task }, { $set: { status: req.params.status } }, (err, num) => {
+            task_1.Task.update({ _id: req.params.task }, { $set: { status: req.params.status } }, (err, num) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -183,7 +183,7 @@ class TaskService {
             res.send(ret.error);
         }
         else {
-            User.findOne({ username: req.params.username }, (err, user) => {
+            user_1.User.findOne({ username: req.params.username }, (err, user) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -195,7 +195,7 @@ class TaskService {
                     next();
                 }
                 else {
-                    Task.update({ _id: req.params.task }, { $addToSet: { members: user._id } }, (errB, num) => {
+                    task_1.Task.update({ _id: req.params.task }, { $addToSet: { members: user._id } }, (errB, num) => {
                         if (errB) {
                             logger_1.logger.error(errB);
                             return next(new errors.InvalidContentError(errB.errors.name.message));
@@ -228,7 +228,7 @@ class TaskService {
             res.send(ret.error);
         }
         else {
-            User.findOne({ username: req.params.username }, (err, user) => {
+            user_1.User.findOne({ username: req.params.username }, (err, user) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -240,7 +240,7 @@ class TaskService {
                     next();
                 }
                 else {
-                    Task.update({ _id: req.params.task }, { $pull: { members: user._id } }, (errB, num) => {
+                    task_1.Task.update({ _id: req.params.task }, { $pull: { members: user._id } }, (errB, num) => {
                         if (errB) {
                             logger_1.logger.error(errB);
                             return next(new errors.InvalidContentError(errB.errors.name.message));

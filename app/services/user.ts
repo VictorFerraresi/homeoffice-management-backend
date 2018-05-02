@@ -5,8 +5,7 @@ import { logger } from "../common/logger";
 import { config } from "../common/config";
 import * as bcrypt from "bcrypt-node";
 import * as jwt from "jsonwebtoken";
-
-const User = Mongoose.model('User');
+import { User, IUser } from "../models/user";
 
 export class UserService {
   /**
@@ -65,7 +64,7 @@ export class UserService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }).then((newUser: any) => {
+      User.findOne({ username: req.params.username }).then((newUser: IUser) => {
         if (newUser === null) {
           res.status(203);
           ret = new ErrorResponse(203, 'Este usuário não existe.');
@@ -128,7 +127,7 @@ export class UserService {
       res.send(ret.error);
     } else {
       User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
-        .then((newUser: any) => {
+        .then((newUser: IUser) => {
           if (newUser !== null) {
             if (newUser.username === req.params.username) {
               res.status(203);

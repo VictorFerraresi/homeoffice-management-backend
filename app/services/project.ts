@@ -2,9 +2,8 @@ import * as Mongoose from "mongoose";
 import * as errors from "restify-errors";
 import { ErrorResponse } from "../error/error-response";
 import { logger } from "../common/logger";
-
-const Project = Mongoose.model('Project');
-const User = Mongoose.model('User');
+import { Project } from "../models/project";
+import { User } from "../models/user";
 
 export class ProjectService {
   /**

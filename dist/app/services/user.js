@@ -1,13 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Mongoose = require("mongoose");
 const errors = require("restify-errors");
 const error_response_1 = require("../error/error-response");
 const logger_1 = require("../common/logger");
 const config_1 = require("../common/config");
 const bcrypt = require("bcrypt-node");
 const jwt = require("jsonwebtoken");
-const User = Mongoose.model('User');
+const user_1 = require("../models/user");
 class UserService {
     /**
      * Method responsible for returning all the Users in the database as a RESTful webservice
@@ -16,7 +15,7 @@ class UserService {
      * @param  {Function} next Next function to be called in the chain
      */
     static getAll(req, res, next) {
-        User.find({}, (err, users) => {
+        user_1.User.find({}, (err, users) => {
             if (err) {
                 logger_1.logger.error(err);
                 return next(new errors.InvalidContentError(err.errors.name.message));
@@ -32,7 +31,7 @@ class UserService {
      * @param  {Function} next Next function to be called in the chain
      */
     static find(req, res, next) {
-        User.findOne({ username: req.params.username }, (err, user) => {
+        user_1.User.findOne({ username: req.params.username }, (err, user) => {
             if (err) {
                 logger_1.logger.error(err);
                 return next(new errors.InvalidContentError(err.errors.name.message));
@@ -62,7 +61,7 @@ class UserService {
             res.send(ret.error);
         }
         else {
-            User.findOne({ username: req.params.username }).then((newUser) => {
+            user_1.User.findOne({ username: req.params.username }).then((newUser) => {
                 if (newUser === null) {
                     res.status(203);
                     ret = new error_response_1.ErrorResponse(203, 'Este usuário não existe.');
@@ -123,7 +122,7 @@ class UserService {
             res.send(ret.error);
         }
         else {
-            User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
+            user_1.User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
                 .then((newUser) => {
                 if (newUser !== null) {
                     if (newUser.username === req.params.username) {
@@ -140,7 +139,7 @@ class UserService {
                 else {
                     try {
                         bcrypt.hash(req.params.password, null, null, (err, hash) => {
-                            const usr = new User({
+                            const usr = new user_1.User({
                                 username: req.params.username,
                                 password: hash,
                                 email: req.params.email
