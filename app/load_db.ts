@@ -6,14 +6,14 @@ import { config } from './common/config';
 (mongoose as any).Promise = global.Promise;
 
 const options = {
-  promiseLibrary: global.Promise
+  promiseLibrary: global.Promise,
 };
 
-export = new Promise(function(resolve, reject) {
+export = new Promise((resolve, reject) => {
   mongoose.connect(config.db.uri, options)
-    .then(function(handle) {
+    .then((handle) => {
       const admin = mongoose.connection.db.admin();
-      admin.buildInfo(function(err, info) {
+      admin.buildInfo((err, info) => {
         if (err) {
           logger.error(`Error getting MongoDB info: ${err}`);
           reject(err);
@@ -27,6 +27,6 @@ export = new Promise(function(resolve, reject) {
     .catch((err) => {
       logger.error(`Error connecting to MongoDB: ${err}`);
       reject(err);
-      throw err;      
+      throw err;
     });
 });

@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const winston = require("winston");
 const config_1 = require("./config");
-const LoggerLevel = config_1.config.logger.level;
+const loggerLevel = config_1.config.logger.level;
 exports.logger = new winston.Logger({
-    level: LoggerLevel,
+    level: loggerLevel,
     transports: [
         new winston.transports.File({
             filename: './logs/errors.log',
-            level: 'error'
+            level: 'error',
         }),
-        new winston.transports.Console({ 'timestamp': true })
-    ]
+        new winston.transports.Console({ timestamp: true }),
+    ],
 });

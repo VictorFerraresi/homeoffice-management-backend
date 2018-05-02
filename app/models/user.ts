@@ -1,29 +1,30 @@
-import { Document, Schema, model, Model } from "mongoose";
-import { ObjectId } from "bson";
+import { Document, Schema, model, Model } from 'mongoose';
+import { ObjectId } from 'bson';
 
 export interface IUserAttribute extends Document {
-  user_id: ObjectId,
-  attribute: string
+  user_id: ObjectId;
+  attribute: string;
 }
 
-export const UserAttributeSchema = new Schema({
+export const userAttributeSchema = new Schema({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', index: true },
   attribute: {
     type: String,
     enum: ['active', 'banned', 'moderator', 'admin'],
-    index: true
+    index: true,
   },
-  expiresAt: Date
+  expiresAt: Date,
+// tslint:disable-next-line:align
 }, { timestamps: { createdAt: 'createdAt' } });
 
 export interface IUser extends Document {
-  username: string,
-  email: string, 
-  password: string,
-  attributes?: IUserAttribute[]
+  username: string;
+  email: string;
+  password: string;
+  attributes?: IUserAttribute[];
 }
 
-export const UserSchema = new Schema({
+export const userSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -31,24 +32,25 @@ export const UserSchema = new Schema({
     minlen: 5,
     maxlen: 16,
     match: [/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9])*$/, 'invalid username'],
-    lowercase: true
+    lowercase: true,
   },
   email: {
     type: String,
     required: true,
     index: { unique: true },
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'invalid email'],
-    lowercase: true
+    lowercase: true,
   },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+// tslint:disable-next-line:align
 }, { timestamps: { createdAt: 'createdAt' } });
 
-UserSchema.virtual('attributes', {
+userSchema.virtual('attributes', {
   ref: 'UserAttribute',
   localField: '_id',
   foreignField: 'user',
-  justOne: false
+  justOne: false,
 });
 
-export const UserAttribute = model<IUserAttribute>("UserAttribute", UserAttributeSchema);
-export const User = model<IUser>("User", UserSchema);
+export const userAttribute = model<IUserAttribute>('UserAttribute', userAttributeSchema);
+export const user = model<IUser>('User', userSchema);

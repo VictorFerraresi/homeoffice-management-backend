@@ -14,7 +14,7 @@ class ProjectService {
      * @param  {Function} next Next function to be called in the chain
      */
     static getAll(req, res, next) {
-        project_1.Project.find({})
+        project_1.project.find({})
             .populate('createdBy')
             .exec((err, projects) => {
             if (err) {
@@ -32,7 +32,7 @@ class ProjectService {
      * @param  {Function} next Next function to be called in the chain
      */
     static find(req, res, next) {
-        project_1.Project.findOne({ name: req.params.project_name })
+        project_1.project.findOne({ name: req.params.project_name })
             .populate('createdBy')
             .exec((err, project) => {
             if (err) {
@@ -64,7 +64,7 @@ class ProjectService {
             res.send(ret.error);
         }
         else {
-            project_1.Project.findOne({ name: req.params.name })
+            project_1.project.findOne({ name: req.params.name })
                 .then((newProject) => {
                 if (newProject !== null) {
                     res.status(203);
@@ -72,9 +72,9 @@ class ProjectService {
                     res.send(ret.error);
                 }
                 else {
-                    const proj = new project_1.Project({
+                    const proj = new project_1.project({
                         name: req.params.name,
-                        createdBy: new mongoose_1.mongo.ObjectId(req.params.createdBy)
+                        createdBy: new mongoose_1.mongo.ObjectId(req.params.createdBy),
                     });
                     try {
                         proj.save();
@@ -110,7 +110,7 @@ class ProjectService {
             res.send(ret.error);
         }
         else {
-            user_1.User.findOne({ username: req.params.username }, (err, user) => {
+            user_1.user.findOne({ username: req.params.username }, (err, user) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -122,7 +122,7 @@ class ProjectService {
                     next();
                 }
                 else {
-                    project_1.Project.update({ _id: req.params.project }, { $addToSet: { members: user._id } }, (errB, num) => {
+                    project_1.project.update({ _id: req.params.project }, { $addToSet: { members: user._id } }, (errB, num) => {
                         if (errB) {
                             logger_1.logger.error(errB);
                             return next(new errors.InvalidContentError(errB.errors.name.message));
@@ -155,7 +155,7 @@ class ProjectService {
             res.send(ret.error);
         }
         else {
-            user_1.User.findOne({ username: req.params.username }, (err, user) => {
+            user_1.user.findOne({ username: req.params.username }, (err, user) => {
                 if (err) {
                     logger_1.logger.error(err);
                     return next(new errors.InvalidContentError(err.errors.name.message));
@@ -167,7 +167,7 @@ class ProjectService {
                     next();
                 }
                 else {
-                    project_1.Project.update({ _id: req.params.project }, { $pull: { members: user._id } }, (errB, num) => {
+                    project_1.project.update({ _id: req.params.project }, { $pull: { members: user._id } }, (errB, num) => {
                         if (errB) {
                             logger_1.logger.error(errB);
                             return next(new errors.InvalidContentError(errB.errors.name.message));

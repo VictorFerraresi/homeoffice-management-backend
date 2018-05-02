@@ -1,26 +1,27 @@
-import { Document, Schema, model, Model } from "mongoose";
-import { IUser } from "./user";
+import { Document, Schema, model, Model } from 'mongoose';
+import { IUser } from './user';
 
 export interface IProject extends Document {
-  name: string,
-  createdBy: IUser, 
-  members?: IUser[]
+  name: string;
+  createdBy: IUser;
+  members?: IUser[];
 }
 
-export const ProjectSchema = new Schema({
+export const projectSchema = new Schema({
   name: {
     type: String,
     required: true,
     index: { unique: true },
     minlen: 5,
-    maxlen: 128
+    maxlen: 128,
   },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
   },
-  members: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+// tslint:disable-next-line:align
 }, { timestamps: { createdAt: 'createdAt' } });
 
-export const Project = model<IProject>("Project", ProjectSchema);
+export const project = model<IProject>('Project', projectSchema);

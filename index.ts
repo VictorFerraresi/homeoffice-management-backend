@@ -1,5 +1,5 @@
-import { config } from "./app/common/config";
-import { logger } from "./app/common/logger";
+import { config } from './app/common/config';
+import { logger } from './app/common/logger';
 
 logger.info(`Nodejs version is ${process.version}`);
 logger.info('Loading /noderp-ws/ script. Howdy (´・ω・`)');

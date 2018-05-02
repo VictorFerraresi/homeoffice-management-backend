@@ -1,16 +1,17 @@
-import { config } from "./common/config";
-import * as restify from "restify";
-import * as Mongoose from "mongoose";
-import * as restifyPlugins from "restify-plugins";
-import { logger } from "./common/logger";
-import * as corsMiddleware from "restify-cors-middleware";
-import { JwtMiddleware } from "./security/jwt-middleware";
+import { config } from './common/config';
+import * as restify from 'restify';
+import * as Mongoose from 'mongoose';
+import * as restifyPlugins from 'restify-plugins';
+import { logger } from './common/logger';
+import * as corsMiddleware from 'restify-cors-middleware';
+import { JwtMiddleware } from './security/jwt-middleware';
 
 const cors = corsMiddleware({
   preflightMaxAge: 5,
   origins: ['*'],
-  allowHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type'],
-  exposeHeaders: ['API-Token-Expiry']
+  allowHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type'],
+  exposeHeaders: ['API-Token-Expiry'],
 });
 
 const userRouter = require('./routes/user');
@@ -19,7 +20,7 @@ const tasksRouter = require('./routes/task');
 
 const server = restify.createServer({
   name: config.name,
-  version: config.version
+  version: config.version,
 });
 
 server.pre(cors.preflight);

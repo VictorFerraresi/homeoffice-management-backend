@@ -1,7 +1,7 @@
 export class ErrorResponse {
   private code: Number;
   private msg: String;
-  
+
   constructor (code, msg) {
     this.code = code;
     this.msg = msg;
@@ -10,7 +10,7 @@ export class ErrorResponse {
   get error () {
     return {
       code: this.code,
-      message: this.msg
+      message: this.msg,
     };
   }
 }

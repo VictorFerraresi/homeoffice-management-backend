@@ -1,9 +1,9 @@
-import { mongo } from "mongoose";
-import * as errors from "restify-errors";
-import { ErrorResponse } from "../error/error-response";
-import { logger } from "../common/logger";
-import { Project } from "../models/project";
-import { User } from "../models/user";
+import { mongo } from 'mongoose';
+import * as errors from 'restify-errors';
+import { ErrorResponse } from '../error/error-response';
+import { logger } from '../common/logger';
+import { project } from '../models/project';
+import { user } from '../models/user';
 
 export class ProjectService {
   /**
@@ -13,7 +13,7 @@ export class ProjectService {
    * @param  {Function} next Next function to be called in the chain
    */
   static getAll (req, res, next) {
-    Project.find({})
+    project.find({})
       .populate('createdBy')
       .exec((err, projects) => {
         if (err) {
@@ -33,7 +33,7 @@ export class ProjectService {
    * @param  {Function} next Next function to be called in the chain
    */
   static find (req, res, next) {
-    Project.findOne({ name: req.params.project_name })
+    project.findOne({ name: req.params.project_name })
       .populate('createdBy')
       .exec((err, project) => {
         if (err) {
@@ -66,16 +66,16 @@ export class ProjectService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      Project.findOne({ name: req.params.name })
+      project.findOne({ name: req.params.name })
         .then((newProject) => {
           if (newProject !== null) {
             res.status(203);
             ret = new ErrorResponse(203, 'Já existe um projeto com este nome.');
             res.send(ret.error);
           } else {
-            const proj = new Project({
+            const proj = new project({
               name: req.params.name,
-              createdBy: new mongo.ObjectId(req.params.createdBy)
+              createdBy: new mongo.ObjectId(req.params.createdBy),
             });
             try {
               proj.save();
@@ -111,7 +111,7 @@ export class ProjectService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }, (err, user) => {
+      user.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
           logger.error(err);
           return next(new errors.InvalidContentError(err.errors.name.message));
@@ -123,7 +123,7 @@ export class ProjectService {
           res.send(ret.error);
           next();
         } else {
-          Project.update(
+          project.update(
             { _id: req.params.project },
             { $addToSet: { members: user._id } }, (errB, num) => {
               if (errB) {
@@ -139,7 +139,7 @@ export class ProjectService {
                 res.status(200);
                 res.send(ret);
               }
-            }
+            },
           );
         }
       });
@@ -160,7 +160,7 @@ export class ProjectService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }, (err, user) => {
+      user.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
           logger.error(err);
           return next(new errors.InvalidContentError(err.errors.name.message));
@@ -172,7 +172,7 @@ export class ProjectService {
           res.send(ret.error);
           next();
         } else {
-          Project.update(
+          project.update(
             { _id: req.params.project },
             { $pull: { members: user._id } }, (errB, num) => {
               if (errB) {
@@ -188,7 +188,7 @@ export class ProjectService {
                 res.status(200);
                 res.send(ret);
               }
-            }
+            },
           );
         }
       });

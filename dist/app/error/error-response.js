@@ -8,7 +8,7 @@ class ErrorResponse {
     get error() {
         return {
             code: this.code,
-            message: this.msg
+            message: this.msg,
         };
     }
 }

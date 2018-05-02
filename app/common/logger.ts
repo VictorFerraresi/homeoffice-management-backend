@@ -1,15 +1,15 @@
-import * as winston from "winston";
-import { config } from "./config";
+import * as winston from 'winston';
+import { config } from './config';
 
-const LoggerLevel = config.logger.level;
+const loggerLevel = config.logger.level;
 
 export const logger = new winston.Logger({
-  level: LoggerLevel,
+  level: loggerLevel,
   transports: [
     new winston.transports.File({
       filename: './logs/errors.log',
-      level: 'error'
+      level: 'error',
     }),
-    new winston.transports.Console({ 'timestamp': true })
-  ]
+    new winston.transports.Console({ timestamp: true }),
+  ],
 });

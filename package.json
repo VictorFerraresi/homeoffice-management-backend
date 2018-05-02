@@ -4,7 +4,9 @@
   "description": "CRUD Apis for a home office management application",
   "main": "index.js",
   "scripts": {
-    "start": "eslint . && nodemon index",
+    "lint": "tslint --project .",
+    "compile": "tsc",
+    "start": "npm run lint && npm run compile && cd dist && nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,8 +26,9 @@
     "@types/restify-errors": "^4.3.2",
     "@types/restify-plugins": "^1.5.11",
     "@types/winston": "^2.3.9",
-    "eslint-config-airbnb-standard": "^1.6.6",
     "nodemon": "^1.17.3",
+    "tslint": "^5.9.1",
+    "tslint-config-airbnb": "^5.8.0",
     "typescript": "^2.8.3"
   },
   "dependencies": {

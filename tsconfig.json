@@ -5,8 +5,7 @@
     "outDir": "./dist",
     "types": ["node", "winston"],
     "lib": ["es2017"],
-    "strictNullChecks": true,
-    "watch": true
+    "strictNullChecks": true
   },
   "include": [
     "./**/*.ts"

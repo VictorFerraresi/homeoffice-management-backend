@@ -1,6 +1,6 @@
-import * as jsonwebtoken from "jsonwebtoken";
-import { ErrorResponse } from "../error/error-response";
-import { config } from "../common/config";
+import * as jsonwebtoken from 'jsonwebtoken';
+import { ErrorResponse } from '../error/error-response';
+import { config } from '../common/config';
 
 export class JwtMiddleware {
   /**
@@ -10,14 +10,16 @@ export class JwtMiddleware {
    * @param  {Function} next Next function to be called in the chain
    */
   static verifyToken (req, res, next) {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-      jsonwebtoken.verify(req.headers.authorization.split(' ')[1], config.jwt.secret, (err, decode) => {
-        if (err) {
-          req.user = undefined;
-        }
-        req.user = decode;
-        next();
-      });
+    if (req.headers && req.headers.authorization &&
+      req.headers.authorization.split(' ')[0] === 'Bearer') {
+      jsonwebtoken.verify(req.headers.authorization.split(' ')[1],
+                          config.jwt.secret, (err, decode) => {
+                            if (err) {
+                              req.user = undefined;
+                            }
+                            req.user = decode;
+                            next();
+                          });
     } else {
       req.user = undefined;
       next();

@@ -10,15 +10,16 @@ const jwt_middleware_1 = require("./security/jwt-middleware");
 const cors = corsMiddleware({
     preflightMaxAge: 5,
     origins: ['*'],
-    allowHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type'],
-    exposeHeaders: ['API-Token-Expiry']
+    allowHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type'],
+    exposeHeaders: ['API-Token-Expiry'],
 });
 const userRouter = require('./routes/user');
 const projectRouter = require('./routes/project');
 const tasksRouter = require('./routes/task');
 const server = restify.createServer({
     name: config_1.config.name,
-    version: config_1.config.version
+    version: config_1.config.version,
 });
 server.pre(cors.preflight);
 server.use(cors.actual);

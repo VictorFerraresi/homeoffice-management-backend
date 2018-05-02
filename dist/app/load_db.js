@@ -4,13 +4,13 @@ const logger_1 = require("./common/logger");
 const config_1 = require("./common/config");
 mongoose.Promise = global.Promise;
 const options = {
-    promiseLibrary: global.Promise
+    promiseLibrary: global.Promise,
 };
-module.exports = new Promise(function (resolve, reject) {
+module.exports = new Promise((resolve, reject) => {
     mongoose.connect(config_1.config.db.uri, options)
-        .then(function (handle) {
+        .then((handle) => {
         const admin = mongoose.connection.db.admin();
-        admin.buildInfo(function (err, info) {
+        admin.buildInfo((err, info) => {
             if (err) {
                 logger_1.logger.error(`Error getting MongoDB info: ${err}`);
                 reject(err);

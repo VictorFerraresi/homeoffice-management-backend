@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
-exports.UserAttributeSchema = new mongoose_1.Schema({
+exports.userAttributeSchema = new mongoose_1.Schema({
     user_id: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', index: true },
     attribute: {
         type: String,
         enum: ['active', 'banned', 'moderator', 'admin'],
-        index: true
+        index: true,
     },
-    expiresAt: Date
+    expiresAt: Date,
 }, { timestamps: { createdAt: 'createdAt' } });
-exports.UserSchema = new mongoose_1.Schema({
+exports.userSchema = new mongoose_1.Schema({
     username: {
         type: String,
         required: true,
@@ -18,22 +18,22 @@ exports.UserSchema = new mongoose_1.Schema({
         minlen: 5,
         maxlen: 16,
         match: [/^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9])*$/, 'invalid username'],
-        lowercase: true
+        lowercase: true,
     },
     email: {
         type: String,
         required: true,
         index: { unique: true },
         match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'invalid email'],
-        lowercase: true
+        lowercase: true,
     },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
 }, { timestamps: { createdAt: 'createdAt' } });
-exports.UserSchema.virtual('attributes', {
+exports.userSchema.virtual('attributes', {
     ref: 'UserAttribute',
     localField: '_id',
     foreignField: 'user',
-    justOne: false
+    justOne: false,
 });
-exports.UserAttribute = mongoose_1.model("UserAttribute", exports.UserAttributeSchema);
-exports.User = mongoose_1.model("User", exports.UserSchema);
+exports.userAttribute = mongoose_1.model('UserAttribute', exports.userAttributeSchema);
+exports.user = mongoose_1.model('User', exports.userSchema);

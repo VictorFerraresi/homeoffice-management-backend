@@ -1,10 +1,10 @@
-import { mongo } from "mongoose";
-import * as errors from "restify-errors";
-import { ErrorResponse } from "../error/error-response";
-import { logger } from "../common/logger";
-import { Task } from "../models/task";
-import { Project } from "../models/project";
-import { User } from "../models/user";
+import { mongo } from 'mongoose';
+import * as errors from 'restify-errors';
+import { logger } from '../common/logger';
+import { ErrorResponse } from '../error/error-response';
+import { project } from '../models/project';
+import { task } from '../models/task';
+import { user } from '../models/user';
 
 export class TaskService {
   /**
@@ -13,8 +13,8 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static getAll (req, res, next) {
-    Task.find({})
+  public static getAll(req, res, next) {
+    task.find({})
       .populate('project')
       .exec((err, tasks) => {
         if (err) {
@@ -32,8 +32,8 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static findByProject (req, res, next) {
-    Project.findOne({ name: req.params.project_name }, (err, proj) => {
+  public static findByProject(req, res, next) {
+    project.findOne({ name: req.params.project_name }, (err, proj) => {
       if (err) {
         logger.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -45,7 +45,7 @@ export class TaskService {
         res.send(ret.error);
         next();
       } else {
-        Task.find({ project: proj._id })
+        task.find({ project: proj._id })
           .populate('project')
           .exec((errB, tasks) => {
             if (errB) {
@@ -66,7 +66,7 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static createNew (req, res, next) {
+  public static createNew(req, res, next) {
     let ret;
 
     if (req.params.name === undefined || req.params.priority === undefined ||
@@ -75,21 +75,21 @@ export class TaskService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      Task.findOne({ name: req.params.name, project: req.params.project })
+      task.findOne({ name: req.params.name, project: req.params.project })
         .then((newTask) => {
           if (newTask !== null) {
             res.status(203);
             ret = new ErrorResponse(203, 'Já existe uma task com este nome neste projeto.');
             res.send(ret.error);
           } else {
-            const task = new Task({
+            const tsk = new task({
               name: req.params.name,
               priority: req.params.priority,
               project: new mongo.ObjectId(req.params.project),
-              status: 'unassigned'
+              status: 'unassigned',
             });
             try {
-              task.save();
+              tsk.save();
               res.status(200);
               res.send(ret);
             } catch (error) {
@@ -114,7 +114,7 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static setPriority (req, res, next) {
+  public static setPriority(req, res, next) {
     let ret;
 
     if (req.params.task === undefined || req.params.priority === undefined) {
@@ -122,7 +122,7 @@ export class TaskService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      Task.update(
+      task.update(
         { _id: req.params.task },
         { $set: { priority: req.params.priority } }, (err, num) => {
           if (err) {
@@ -138,7 +138,7 @@ export class TaskService {
             res.status(200);
             res.send(ret);
           }
-        }
+        },
       );
     }
   }
@@ -149,7 +149,7 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static setStatus (req, res, next) {
+  public static setStatus(req, res, next) {
     let ret;
 
     if (req.params.task === undefined || req.params.status === undefined) {
@@ -157,7 +157,7 @@ export class TaskService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      Task.update(
+      task.update(
         { _id: req.params.task },
         { $set: { status: req.params.status } }, (err, num) => {
           if (err) {
@@ -173,7 +173,7 @@ export class TaskService {
             res.status(200);
             res.send(ret);
           }
-        }
+        },
       );
     }
   }
@@ -184,7 +184,7 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static addMember (req, res, next) {
+  public static addMember (req, res, next) {
     let ret;
 
     if (req.params.task === undefined || req.params.username === undefined) {
@@ -192,7 +192,7 @@ export class TaskService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }, (err, user) => {
+      user.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
           logger.error(err);
           return next(new errors.InvalidContentError(err.errors.name.message));
@@ -204,7 +204,7 @@ export class TaskService {
           res.send(ret.error);
           next();
         } else {
-          Task.update(
+          task.update(
             { _id: req.params.task },
             { $addToSet: { members: user._id } }, (errB, num) => {
               if (errB) {
@@ -220,7 +220,7 @@ export class TaskService {
                 res.status(200);
                 res.send(ret);
               }
-            }
+            },
           );
         }
       });
@@ -233,7 +233,7 @@ export class TaskService {
    * @param  {Object}   res  HTTP Response
    * @param  {Function} next Next function to be called in the chain
    */
-  static removeMember (req, res, next) {
+  public static removeMember (req, res, next) {
     let ret;
 
     if (req.params.task === undefined || req.params.username === undefined) {
@@ -241,7 +241,7 @@ export class TaskService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }, (err, user) => {
+      user.findOne({ username: req.params.username }, (err, user) => {
         if (err) {
           logger.error(err);
           return next(new errors.InvalidContentError(err.errors.name.message));
@@ -253,7 +253,7 @@ export class TaskService {
           res.send(ret.error);
           next();
         } else {
-          Task.update(
+          task.update(
             { _id: req.params.task },
             { $pull: { members: user._id } }, (errB, num) => {
               if (errB) {
@@ -269,7 +269,7 @@ export class TaskService {
                 res.status(200);
                 res.send(ret);
               }
-            }
+            },
           );
         }
       });

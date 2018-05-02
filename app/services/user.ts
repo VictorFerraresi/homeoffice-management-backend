@@ -1,10 +1,10 @@
-import * as errors from "restify-errors";
-import { ErrorResponse } from "../error/error-response";
-import { logger } from "../common/logger";
-import { config } from "../common/config";
-import * as bcrypt from "bcrypt-node";
-import * as jwt from "jsonwebtoken";
-import { User, IUser } from "../models/user";
+import * as errors from 'restify-errors';
+import { ErrorResponse } from '../error/error-response';
+import { logger } from '../common/logger';
+import { config } from '../common/config';
+import * as bcrypt from 'bcrypt-node';
+import * as jwt from 'jsonwebtoken';
+import { user, IUser } from '../models/user';
 
 export class UserService {
   /**
@@ -14,7 +14,7 @@ export class UserService {
    * @param  {Function} next Next function to be called in the chain
    */
   static getAll (req, res, next) {
-    User.find({}, (err, users) => {
+    user.find({}, (err, users) => {
       if (err) {
         logger.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -32,7 +32,7 @@ export class UserService {
    * @param  {Function} next Next function to be called in the chain
    */
   static find (req, res, next) {
-    User.findOne({ username: req.params.username }, (err, user) => {
+    user.findOne({ username: req.params.username }, (err, user) => {
       if (err) {
         logger.error(err);
         return next(new errors.InvalidContentError(err.errors.name.message));
@@ -63,7 +63,7 @@ export class UserService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ username: req.params.username }).then((newUser: IUser) => {
+      user.findOne({ username: req.params.username }).then((newUser: IUser) => {
         if (newUser === null) {
           res.status(203);
           ret = new ErrorResponse(203, 'Este usuário não existe.');
@@ -81,11 +81,11 @@ export class UserService {
                 const usr = {
                   email: newUser.email,
                   username: newUser.username,
-                  _id: newUser._id
+                  _id: newUser._id,
                 };
 
                 ret = {
-                  token: jwt.sign(usr, config.jwt.secret)
+                  token: jwt.sign(usr, config.jwt.secret),
                 };
 
                 res.send(ret);
@@ -125,7 +125,7 @@ export class UserService {
       ret = new ErrorResponse(400, 'Payload de request inválido.');
       res.send(ret.error);
     } else {
-      User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
+      user.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
         .then((newUser: IUser) => {
           if (newUser !== null) {
             if (newUser.username === req.params.username) {
@@ -140,10 +140,10 @@ export class UserService {
           } else {
             try {
               bcrypt.hash(req.params.password, null, null, (err, hash) => {
-                const usr = new User({
+                const usr = new user({
                   username: req.params.username,
                   password: hash,
-                  email: req.params.email
+                  email: req.params.email,
                 });
                 try {
                   usr.save();

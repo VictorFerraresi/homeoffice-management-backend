@@ -15,7 +15,7 @@ class UserService {
      * @param  {Function} next Next function to be called in the chain
      */
     static getAll(req, res, next) {
-        user_1.User.find({}, (err, users) => {
+        user_1.user.find({}, (err, users) => {
             if (err) {
                 logger_1.logger.error(err);
                 return next(new errors.InvalidContentError(err.errors.name.message));
@@ -31,7 +31,7 @@ class UserService {
      * @param  {Function} next Next function to be called in the chain
      */
     static find(req, res, next) {
-        user_1.User.findOne({ username: req.params.username }, (err, user) => {
+        user_1.user.findOne({ username: req.params.username }, (err, user) => {
             if (err) {
                 logger_1.logger.error(err);
                 return next(new errors.InvalidContentError(err.errors.name.message));
@@ -61,7 +61,7 @@ class UserService {
             res.send(ret.error);
         }
         else {
-            user_1.User.findOne({ username: req.params.username }).then((newUser) => {
+            user_1.user.findOne({ username: req.params.username }).then((newUser) => {
                 if (newUser === null) {
                     res.status(203);
                     ret = new error_response_1.ErrorResponse(203, 'Este usuário não existe.');
@@ -79,10 +79,10 @@ class UserService {
                                 const usr = {
                                     email: newUser.email,
                                     username: newUser.username,
-                                    _id: newUser._id
+                                    _id: newUser._id,
                                 };
                                 ret = {
-                                    token: jwt.sign(usr, config_1.config.jwt.secret)
+                                    token: jwt.sign(usr, config_1.config.jwt.secret),
                                 };
                                 res.send(ret);
                             }
@@ -122,7 +122,7 @@ class UserService {
             res.send(ret.error);
         }
         else {
-            user_1.User.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
+            user_1.user.findOne({ $or: [{ username: req.params.username }, { email: req.params.email }] })
                 .then((newUser) => {
                 if (newUser !== null) {
                     if (newUser.username === req.params.username) {
@@ -139,10 +139,10 @@ class UserService {
                 else {
                     try {
                         bcrypt.hash(req.params.password, null, null, (err, hash) => {
-                            const usr = new user_1.User({
+                            const usr = new user_1.user({
                                 username: req.params.username,
                                 password: hash,
-                                email: req.params.email
+                                email: req.params.email,
                             });
                             try {
                                 usr.save();
